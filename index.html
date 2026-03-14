@@ -237,7 +237,7 @@ p,li{font-weight:300;font-size:clamp(0.85rem,1.2vw,1rem);line-height:1.6}
       </ul>
     </div>
   </div>
-  <div style="margin-top:2rem;background:#000;color:#fff;padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem">
+  <div style="margin-top:2rem;background:var(--green-bg);color:var(--green-text);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem;border-radius:8px">
     <span style="font-size:2rem">🎙️</span>
     <div style="flex:1">
       <p style="font-weight:500;margin-bottom:0.8rem">Demo: Llamada AI en español</p>
@@ -245,13 +245,7 @@ p,li{font-weight:300;font-size:clamp(0.85rem,1.2vw,1rem);line-height:1.6}
         <source src="spanish.m4a" type="audio/mp4" />
         <source src="spanish.ogg" type="audio/ogg" />
       </audio>
-      <div style="display:flex;align-items:center;gap:1rem;cursor:pointer;margin-top:0.8rem" onclick="togglePlay()">
-        <div id="playBtn" style="width:44px;height:44px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">▶</div>
-        <div style="flex:1">
-          <div style="background:rgba(255,255,255,0.2);height:6px;border-radius:3px;overflow:hidden"><div id="prog" style="width:0%;height:100%;background:#fff;border-radius:3px;transition:width 0.1s"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.3rem"><span id="curTime" style="font-size:0.7rem;color:#888">0:00</span><span id="durTime" style="font-size:0.7rem;color:#888">--:--</span></div>
-        </div>
-      </div>
+      <p class="muted" style="margin-top:0.6rem;font-size:0.75rem">* Use el reproductor para iniciar la demo</p>
     </div>
   </div>
 </section>
@@ -332,47 +326,11 @@ function initAudio(){
   audioReady = true;
 }
 
+// Custom play button removed — using native audio controls for maximum compatibility.
 function togglePlay(){
   initAudio();
-  const btn=document.getElementById('playBtn');
-  try {
-    if(audioEl.paused){
-      const p = audioEl.play();
-      // Some browsers return undefined instead of a Promise
-      if(p && typeof p.then === 'function'){
-        p.then(()=>{btn.textContent='⏸'}).catch((e)=>{
-          console.error('Audio play failed', e);
-          btn.textContent='▶';
-          alert('No se pudo reproducir el audio. Intenta usar los controles del reproductor.');
-        });
-      } else {
-        btn.textContent='⏸';
-      }
-    } else {
-      audioEl.pause();
-      btn.textContent='▶';
-    }
-  } catch (e) {
-    console.error('Audio play threw', e);
-    btn.textContent='▶';
-    alert('No se pudo reproducir el audio. Intenta usar los controles del reproductor.');
-  }
+  try { audioEl.play(); } catch (e) { console.error(e); }
 }
-
-audioEl.addEventListener('loadedmetadata',()=>{
-  const d=audioEl.duration;
-  document.getElementById('durTime').textContent=Math.floor(d/60)+':'+String(Math.floor(d%60)).padStart(2,'0');
-});
-audioEl.addEventListener('timeupdate',()=>{
-  document.getElementById('prog').style.width=(audioEl.currentTime/audioEl.duration*100)+'%';
-  const t=audioEl.currentTime;
-  document.getElementById('curTime').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
-});
-audioEl.addEventListener('ended',()=>{
-  document.getElementById('playBtn').textContent='▶';
-  document.getElementById('prog').style.width='0%';
-  document.getElementById('curTime').textContent='0:00';
-});
 </script>
 </body>
 </html>
