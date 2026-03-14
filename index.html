@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Biocosechas AI — Presentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>Biocosechas AI — Presentation</h1>
+      <p class="subtitle">CSV download + recording playback</p>
+    </header>
+
+    <section class="card">
+      <h2>Download CSV</h2>
+      <p class="muted">Click to download the CSV attached by Alexey.</p>
+      <a class="button" href="assets/leads.csv" download>
+        Download leads.csv
+      </a>
+    </section>
+
+    <section class="card">
+      <h2>Recording</h2>
+      <p class="muted">Press play to start the recording.</p>
+      <video class="player" controls preload="metadata">
+        <source src="assets/recording.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </section>
+
+    <footer class="footer muted">Deployed via GitHub Pages.</footer>
+  </main>
+</body>
+</html>
