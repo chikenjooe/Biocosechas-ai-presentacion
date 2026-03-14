@@ -1,36 +1,356 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Biocosechas AI — Presentation</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biocosechas AI — Vento Labs</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Roboto+Flex:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root {
+  --green-bg:#234c12; --green-text:#ffe7d2;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Roboto Flex',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;overflow-y:scroll}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:5vh 8vw;position:relative;overflow:hidden}
+.slide--white{background:#fff;color:#000}
+.slide--green{background:var(--green-bg);color:var(--green-text)}
+.slide--dark{background:#000;color:#fff}
+
+.slide--white .muted{color:#999} .slide--dark .muted{color:#666} .slide--green .muted{color:rgba(255,231,210,0.5)}
+.slide--white .sub{color:#555} .slide--dark .sub{color:#aaa} .slide--green .sub{color:rgba(255,231,210,0.7)}
+
+h1,h2,h3{font-family:var(--serif);font-weight:400}
+h1{font-size:clamp(2.5rem,5vw,4rem);line-height:1.1}
+h2{font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.15}
+h3{font-size:clamp(1.2rem,2vw,1.6rem)}
+p,li{font-weight:300;font-size:clamp(0.85rem,1.2vw,1rem);line-height:1.6}
+.tag{font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;opacity:0.4}
+.emoji{font-size:1.6rem;margin-bottom:0.75rem;display:block}
+.divider{width:80px;height:1px;margin:1.5rem 0;opacity:0.3}
+.slide--white .divider{background:#000} .slide--green .divider{background:#ffe7d2} .slide--dark .divider{background:#fff}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
+
+.card{padding:2rem;border:1px solid #e0e0e0;transition:transform 0.4s ease}
+.card:hover{transform:translateY(-4px)}
+.slide--dark .card{border-color:#333}
+
+.check-list{list-style:none}
+.check-list li{padding:0.4rem 0;display:flex;align-items:flex-start;gap:0.6rem}
+.check-list li::before{content:"✓";font-weight:600;flex-shrink:0}
+
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 2rem;font-family:var(--serif);font-size:0.95rem;text-decoration:none;transition:opacity 0.3s}
+.btn:hover{opacity:0.8}
+.btn-green{background:var(--green-bg);color:var(--green-text)}
+.btn-black{background:#000;color:#fff}
+.btn-white{background:#fff;color:#000;border:1px solid #ddd}
+
+.data-table{width:100%;border-collapse:collapse;font-size:0.8rem}
+.data-table th{background:var(--green-bg);color:var(--green-text);padding:0.6rem 0.8rem;text-align:left;font-weight:500;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em}
+.data-table td{padding:0.55rem 0.8rem;border-bottom:1px solid #e8e8e8}
+.data-table tr:nth-child(even) td{background:#fafafa}
+.slide--dark .data-table td{color:#ccc;border-bottom-color:#222}
+.slide--dark .data-table tr:nth-child(even) td{background:#0d0d0d}
+.slide--dark .data-table tr:nth-child(odd) td{background:#000}
+
+.stat-box{text-align:center;padding:1.5rem 1rem;background:var(--green-bg);color:var(--green-text)}
+.stat-val{font-family:var(--serif);font-size:2.2rem}
+.stat-label{font-size:0.75rem;margin-top:0.3rem;color:rgba(255,231,210,0.7)}
+
+.arch-hub{width:160px;height:160px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto}
+.slide--white .arch-hub{background:#000} .slide--dark .arch-hub{background:var(--green-bg)}
+.arch-nodes{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:2rem}
+.arch-node{text-align:center;padding:1.2rem 0.8rem;border:1px solid #e0e0e0}
+.slide--dark .arch-node{border-color:#333;background:#111}
+.arch-node .emoji{font-size:1.3rem;margin-bottom:0.4rem}
+.arch-node p{font-size:0.75rem}
+
+.slide-nav{position:fixed;right:2rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.slide-nav a{width:8px;height:8px;border-radius:50%;background:rgba(128,128,128,0.3);transition:all 0.3s}
+.slide-nav a:hover{background:rgba(128,128,128,0.7);transform:scale(1.5)}
+
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){.slide{padding:4vh 5vw}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.arch-nodes{grid-template-columns:repeat(3,1fr)}.slide-nav{display:none}}
+</style>
 </head>
 <body>
-  <main class="container">
-    <header class="header">
-      <h1>Biocosechas AI — Presentation</h1>
-      <p class="subtitle">CSV download + recording playback</p>
-    </header>
 
-    <section class="card">
-      <h2>Download CSV</h2>
-      <p class="muted">Click to download the CSV attached by Alexey.</p>
-      <a class="button" href="assets/leads.csv" download>
-        Download leads.csv
-      </a>
-    </section>
+<nav class="slide-nav">
+  <a href="#s1"></a><a href="#s2"></a><a href="#s3"></a><a href="#s4"></a><a href="#s5"></a>
+  <a href="#s6"></a><a href="#s7"></a><a href="#s8"></a><a href="#s9"></a><a href="#s10"></a>
+</nav>
 
-    <section class="card">
-      <h2>Recording</h2>
-      <p class="muted">Press play to start the recording.</p>
-      <video class="player" controls preload="metadata">
-        <source src="assets/recording.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </section>
+<!-- ══ 1. TITLE (GREEN) ══ -->
+<section class="slide slide--green" id="s1">
+  <img src="biocosechas_logo.png" alt="Biocosechas" style="position:absolute;right:8vw;top:50%;transform:translateY(-50%);width:clamp(120px,15vw,220px);opacity:0.85;pointer-events:none">
+  <div style="margin-bottom:2.5rem;display:flex;align-items:center;gap:1rem">
+    <svg width="46" height="47" viewBox="0 0 46 47" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M27.7119 29.2666L19.9521 46.1074L16.1494 44.3555L23.9092 27.5146L27.7119 29.2666ZM38.8672 39.46L35.0615 41.2041L27.3369 24.3467L31.1436 22.6025L38.8672 39.46ZM20.2031 30.3877L2.17871 34.7402L1.19629 30.6699L19.2207 26.3184L20.2031 30.3877ZM17.1191 22.9053L14.5127 26.1826L0 14.6416L2.60645 11.3643L17.1191 22.9053ZM45.8887 19.3408L45.0244 23.4375L26.8818 19.6064L27.7461 15.5098L45.8887 19.3408ZM18.542 18.542H14.3545V0H18.542V18.542ZM37.4385 5.51367L23.1787 17.3662L20.5029 14.1465L34.7627 2.29395L37.4385 5.51367Z" fill="#FFE7D2"/></svg>
+    <div style="font-family:var(--serif);font-size:1.6rem;color:var(--green-text)">Vento labs</div>
+  </div>
+  <h1 style="max-width:600px">Soluciones de<br>Inteligencia Artificial</h1>
+  <p class="sub" style="margin-top:1rem;font-size:1.1rem">para Biocosechas de México</p>
+  <div class="divider"></div>
+  <p class="muted" style="max-width:400px">4 agentes inteligentes para automatizar ventas, finanzas y operaciones</p>
+</section>
 
-    <footer class="footer muted">Deployed via GitHub Pages.</footer>
-  </main>
+<!-- ══ 2. OVERVIEW (WHITE) ══ -->
+<section class="slide slide--white" id="s2">
+  <p class="tag">01</p>
+  <h2 style="margin:0.5rem 0 0.3rem">Ecosistema de Agentes AI</h2>
+  <p class="muted" style="margin-bottom:2rem">Cuatro soluciones inteligentes que transforman cada área de su negocio</p>
+  <div class="grid-4">
+    <div class="card"><span class="emoji">📊</span><h3>Co-Piloto Financiero</h3><p class="sub" style="margin-top:0.5rem">Reportes automáticos, alertas inteligentes y pronósticos con IA</p></div>
+    <div class="card"><span class="emoji">🔍</span><h3>Buscador de Clientes</h3><p class="sub" style="margin-top:0.5rem">Prospección inteligente en LinkedIn y bases de datos B2B</p></div>
+    <div class="card"><span class="emoji">💬</span><h3>Chat AI de Ventas</h3><p class="sub" style="margin-top:0.5rem">Atención 24/7, interacción con el cliente para todas las consultas sobre pedidos</p></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:start"><span class="emoji">📞</span><span style="font-size:0.6rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:#999;border:1px solid #ddd;padding:0.2rem 0.5rem;border-radius:2px">Adicional</span></div><h3>Agente de Llamadas</h3><p class="sub" style="margin-top:0.5rem">Llamadas en frío automatizadas y recepción de llamadas 24/7</p></div>
+  </div>
+</section>
+
+<!-- ══ 3. FINANCIAL (DARK) ══ -->
+<section class="slide slide--dark" id="s3">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;flex:1;min-height:0;align-items:center">
+    <div>
+      <p class="tag">02</p>
+      <h2 style="margin:0.5rem 0 1rem">Co-Piloto Financiero AI</h2>
+      <ul class="check-list sub">
+        <li>Generación automática de reportes financieros mensuales</li>
+        <li>Análisis de variación vs presupuesto en tiempo real</li>
+        <li>Análisis de márgenes por producto y mercado</li>
+        <li>Detección de tendencias en costos</li>
+        <li>Alertas financieras inteligentes</li>
+        <li>Pronósticos con IA (12–36 meses)</li>
+      </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1rem">
+      <div style="overflow:hidden;border:1px solid #333;border-radius:6px"><img src="finance_demo.jpg" alt="Dashboard" style="width:100%;display:block"></div>
+      <a href="https://claude.ai/public/artifacts/b54b8faa-bd39-4305-9616-fcfddc7227b4" target="_blank" class="btn btn-white">Abrir demo interactiva →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. SEARCH (WHITE) ══ -->
+<section class="slide slide--white" id="s4">
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <p class="tag">03</p>
+      <h2 style="margin:0.5rem 0 1.5rem">Buscador Inteligente de Clientes</h2>
+      <ul class="check-list sub">
+        <li>Ejecutivos de compras en distribuidoras e importadoras</li>
+        <li>Compradores de spirits premium en 9+ países</li>
+        <li>Directores de bebidas en cadenas de retail y hostelería</li>
+        <li>Leads calificados con scoring automático</li>
+        <li>Perfiles completos listos para importar a CRM</li>
+      </ul>
+    </div>
+    <div style="background:var(--green-bg);color:var(--green-text);padding:2rem">
+      <p style="font-size:0.7rem;opacity:0.5;margin-bottom:1rem">Ejemplo de lead encontrado</p>
+      <p style="font-weight:500;font-size:1.1rem">Katie Gallagher</p>
+      <p style="font-size:0.9rem;color:rgba(255,231,210,0.7)">Director of Spirits</p>
+      <p style="font-size:0.85rem;color:rgba(255,231,210,0.5)">Total Wine &amp; More · USA</p>
+      <div style="margin:1rem 0;height:1px;background:rgba(255,231,210,0.15)"></div>
+      <p style="font-size:0.8rem;color:rgba(255,231,210,0.5)">Tipo: Retailer<br>Empleados: 1,000–5,000<br>Autoridad: Alta</p>
+      <p style="font-weight:500;margin-top:1rem;font-size:1rem">Lead Score: 11.84</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. LEAD TABLE (WHITE) ══ -->
+<section class="slide slide--white" id="s5">
+  <p class="tag">04</p>
+  <h2 style="margin:0.5rem 0 0.3rem">Base de Datos de Prospectos</h2>
+  <p class="muted" style="margin-bottom:1.5rem">Generada automáticamente por el agente AI</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Nombre</th><th>Cargo</th><th>Empresa</th><th>País</th><th>Tipo</th><th>Score</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Katie Gallagher</td><td>Director of Spirits</td><td>Total Wine &amp; More</td><td>USA</td><td>Retailer</td><td>11.8</td></tr>
+      <tr><td>2</td><td>Jaime Castro</td><td>Dir. Supply Chain</td><td>Republic National</td><td>USA</td><td>Distributor</td><td>11.1</td></tr>
+      <tr><td>3</td><td>Samuel Kamler</td><td>Dir. Supplier Mgmt</td><td>Republic National</td><td>USA</td><td>Distributor</td><td>11.1</td></tr>
+      <tr><td>4</td><td>Edwina Watson</td><td>Senior Buyer Spirits</td><td>Fortnum &amp; Mason</td><td>UK</td><td>Hospitality</td><td>9.2</td></tr>
+      <tr><td>5</td><td>Evan S.</td><td>Dir. of Beverage</td><td>Signia by Hilton</td><td>USA</td><td>Hospitality</td><td>8.9</td></tr>
+      <tr><td>6</td><td>Greg Fitzsimmons</td><td>Head of Wine</td><td>Grays</td><td>Australia</td><td>Distributor</td><td>8.5</td></tr>
+      <tr><td>7</td><td>Giuseppe Minissale</td><td>Director</td><td>Sword Distribution</td><td>Australia</td><td>Distributor</td><td>8.2</td></tr>
+      <tr><td>8</td><td>Laura Treharne</td><td>Head Supply Chain</td><td>JKS Restaurants</td><td>UK</td><td>Hospitality</td><td>8.1</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:0.8rem;font-size:0.8rem">... y 42 leads más en la base de datos completa</p>
+  <a href="tequila_leads_50.csv" download="tequila_leads_50.csv" class="btn btn-green" style="margin-top:1rem">📥 Descargar base completa (CSV)</a>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem">
+    <div class="stat-box"><div class="stat-val">50+</div><div class="stat-label">Leads</div></div>
+    <div class="stat-box"><div class="stat-val">9</div><div class="stat-label">Países</div></div>
+    <div class="stat-box"><div class="stat-val">100%</div><div class="stat-label">Verificados</div></div>
+    <div class="stat-box"><div class="stat-val">CRM</div><div class="stat-label">Ready</div></div>
+  </div>
+</section>
+
+<!-- ══ 6. CHAT (WHITE) ══ -->
+<section class="slide slide--white" id="s6" style="padding:3vh 5vw">
+  <div class="grid-2" style="align-items:center;flex:1;min-height:0">
+    <div>
+      <p class="tag">05</p>
+      <h2 style="margin:0.5rem 0 0.3rem">Chat AI de Ventas</h2>
+      <p class="muted" style="margin-bottom:1.5rem">Asistente virtual 24/7 en WhatsApp y Web</p>
+      <ul class="check-list sub" style="font-size:0.9rem">
+        <li><strong>Atención al cliente</strong> — Productos, tequila, certificaciones</li>
+        <li><strong>Calificación de leads</strong> — Scoring: distribuidor, importador, bar, retail</li>
+        <li><strong>Cotizaciones AI</strong> — Precios según volumen, destino y producto</li>
+        <li><strong>Creación de pedidos</strong> — Recopila datos → envía al CRM</li>
+        <li><strong>Agenda reuniones</strong> — Horarios + invitación Zoom</li>
+        <li><strong>Multiidioma</strong> — EN, ES, DE, JA</li>
+      </ul>
+      <a href="https://claude.ai/public/artifacts/4595dd9f-cb6d-4058-a59a-0f06f2dcf96d" target="_blank" class="btn btn-green" style="margin-top:1.5rem">Abrir demo interactiva →</a>
+    </div>
+    <div style="overflow:hidden;border:1px solid #e0e0e0;border-radius:6px;max-height:80vh;display:flex;justify-content:center;background:#f5f5f5">
+      <img src="chat_demo.jpg" alt="Chat Demo" style="height:100%;max-width:100%;object-fit:contain;display:block">
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. VOICE (WHITE) ══ -->
+<section class="slide slide--white" id="s7">
+  <p class="tag">06</p>
+  <div style="display:flex;align-items:center;gap:1rem"><h2 style="margin:0">Agente de Llamadas AI</h2><span style="font-size:0.65rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:#999;border:1px solid #ddd;padding:0.25rem 0.6rem;border-radius:2px;white-space:nowrap">Servicio adicional</span></div>
+  <div class="grid-2">
+    <div class="card"><span class="emoji">📞</span><h3>Llamadas en Frío</h3>
+      <ul class="check-list sub" style="margin-top:1rem">
+        <li>Contacta leads automáticamente</li>
+        <li>Presenta productos y propuesta de valor</li>
+        <li>Detecta interés y califica en tiempo real</li>
+        <li>Agenda reuniones con ventas</li>
+        <li>Reporta resultados al CRM</li>
+      </ul>
+    </div>
+    <div class="card"><span class="emoji">🎧</span><h3>Recepción de Llamadas</h3>
+      <ul class="check-list sub" style="margin-top:1rem">
+        <li>Responde llamadas 24/7</li>
+        <li>Información sobre productos y precios</li>
+        <li>Toma pedidos por teléfono</li>
+        <li>Transfiere a humano si necesario</li>
+        <li>Transcripción y resumen automático</li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top:2rem;background:#000;color:#fff;padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem">
+    <span style="font-size:2rem">🎙️</span>
+    <div style="flex:1">
+      <p style="font-weight:500;margin-bottom:0.8rem">Demo: Llamada AI en español</p>
+      <audio id="demoAudio" preload="auto" style="display:none"></audio>
+      <div style="display:flex;align-items:center;gap:1rem;cursor:pointer" onclick="togglePlay()">
+        <div id="playBtn" style="width:44px;height:44px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">▶</div>
+        <div style="flex:1">
+          <div style="background:rgba(255,255,255,0.2);height:6px;border-radius:3px;overflow:hidden"><div id="prog" style="width:0%;height:100%;background:#fff;border-radius:3px;transition:width 0.1s"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.3rem"><span id="curTime" style="font-size:0.7rem;color:#888">0:00</span><span id="durTime" style="font-size:0.7rem;color:#888">--:--</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8. ARCHITECTURE (DARK) ══ -->
+<section class="slide slide--dark" id="s8">
+  <p class="tag">07</p>
+  <h2 style="margin:0.5rem 0 0.3rem">Arquitectura e Integraciones</h2>
+  <p class="sub" style="margin-bottom:2.5rem">Todos los agentes se conectan con su ecosistema existente</p>
+  <div class="arch-hub">
+    <span class="emoji" style="margin:0">🧠</span>
+    <h3 style="color:var(--green-text)">AI Hub</h3>
+    <span style="color:rgba(255,231,210,0.6);font-size:0.7rem;font-family:var(--sans)">Biocosechas</span>
+  </div>
+  <div class="arch-nodes">
+    <div class="arch-node"><span class="emoji">🗄️</span><p class="sub">CRM<br><span class="muted">HubSpot / Salesforce</span></p></div>
+    <div class="arch-node"><span class="emoji">⚙️</span><p class="sub">ERP<br><span class="muted">Producción / Almacén</span></p></div>
+    <div class="arch-node"><span class="emoji">💬</span><p class="sub">WhatsApp<br><span class="muted">Business API</span></p></div>
+    <div class="arch-node"><span class="emoji">🔗</span><p class="sub">LinkedIn<br><span class="muted">Prospección B2B</span></p></div>
+    <div class="arch-node"><span class="emoji">📅</span><p class="sub">Calendario<br><span class="muted">Google / Outlook</span></p></div>
+  </div>
+</section>
+
+<!-- ══ 9. IMPACT (WHITE) ══ -->
+<section class="slide slide--white" id="s9">
+  <p class="tag">08</p>
+  <h2 style="margin:0.5rem 0 2rem">Impacto en su Negocio</h2>
+  <div class="grid-3" style="margin-bottom:2rem">
+    <div class="card" style="text-align:center;padding:2.5rem 1.5rem;background:#fafafa"><span class="emoji" style="font-size:3rem">⏱️</span><div class="stat-val" style="color:#000;background:none">80%</div><p class="sub" style="margin-top:0.5rem">Reducción en tiempo<br>de reportes financieros</p></div>
+    <div class="card" style="text-align:center;padding:2.5rem 1.5rem;background:#fafafa"><span class="emoji" style="font-size:3rem">📈</span><div class="stat-val" style="color:#000;background:none">3x</div><p class="sub" style="margin-top:0.5rem">Más leads calificados<br>por mes</p></div>
+    <div class="card" style="text-align:center;padding:2.5rem 1.5rem;background:#fafafa"><span class="emoji" style="font-size:3rem">🤖</span><div class="stat-val" style="color:#000;background:none">24/7</div><p class="sub" style="margin-top:0.5rem">Atención al cliente<br>sin parar</p></div>
+  </div>
+  <div style="border-top:1px solid #e0e0e0;padding-top:1.5rem;display:flex;flex-direction:column;gap:0.6rem">
+    <p class="sub">⚡ Eliminación de tareas manuales repetitivas en finanzas y ventas</p>
+    <p class="sub">⚡ Decisiones basadas en datos en tiempo real, no en intuición</p>
+    <p class="sub">⚡ Escalamiento de operaciones sin aumentar personal</p>
+    <p class="sub">⚡ Ventaja competitiva: ser la primera tequilera con AI integrada</p>
+  </div>
+</section>
+
+<!-- ══ 10. NEXT STEPS (GREEN) ══ -->
+<section class="slide slide--green" id="s10">
+  <h2 style="margin-bottom:2rem">Próximos Pasos</h2>
+  <div style="display:flex;flex-direction:column;gap:0.5rem">
+    <div style="display:flex;align-items:center;gap:1.2rem;padding:1rem 0"><div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--green-text);color:var(--green-bg);font-family:var(--serif);font-size:1.2rem;flex-shrink:0">1</div><p>Definir prioridades — ¿Qué agente implementar primero?</p></div>
+    <div style="display:flex;align-items:center;gap:1.2rem;padding:1rem 0"><div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--green-text);color:var(--green-bg);font-family:var(--serif);font-size:1.2rem;flex-shrink:0">2</div><p>Conectar datos — Acceso a ERP, CRM y bases de precios</p></div>
+    <div style="display:flex;align-items:center;gap:1.2rem;padding:1rem 0"><div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--green-text);color:var(--green-bg);font-family:var(--serif);font-size:1.2rem;flex-shrink:0">3</div><p>Piloto en 4 semanas — Primer agente funcional con datos reales</p></div>
+    <div style="display:flex;align-items:center;gap:1.2rem;padding:1rem 0"><div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--green-text);color:var(--green-bg);font-family:var(--serif);font-size:1.2rem;flex-shrink:0">4</div><p>Escalar — Activar los 4 agentes progresivamente</p></div>
+  </div>
+  <div class="divider" style="margin-top:2rem"></div>
+  <h3 style="margin-top:0.5rem">¿Listo para transformar su operación con AI?</h3>
+  <p class="muted" style="margin-top:0.5rem">Agende una llamada con nuestro equipo para comenzar</p>
+  <div style="margin-top:3rem;opacity:0.5;display:flex;align-items:center;gap:0.7rem">
+    <svg width="28" height="29" viewBox="0 0 46 47" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M27.7119 29.2666L19.9521 46.1074L16.1494 44.3555L23.9092 27.5146L27.7119 29.2666ZM38.8672 39.46L35.0615 41.2041L27.3369 24.3467L31.1436 22.6025L38.8672 39.46ZM20.2031 30.3877L2.17871 34.7402L1.19629 30.6699L19.2207 26.3184L20.2031 30.3877ZM17.1191 22.9053L14.5127 26.1826L0 14.6416L2.60645 11.3643L17.1191 22.9053ZM45.8887 19.3408L45.0244 23.4375L26.8818 19.6064L27.7461 15.5098L45.8887 19.3408ZM18.542 18.542H14.3545V0H18.542V18.542ZM37.4385 5.51367L23.1787 17.3662L20.5029 14.1465L34.7627 2.29395L37.4385 5.51367Z" fill="#FFE7D2"/></svg>
+    <span style="font-family:var(--serif);font-size:1.1rem">Vento labs</span>
+  </div>
+</section>
+
+<script>
+// Fade in
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')}),{threshold:0.15});
+document.querySelectorAll('.card,.arch-node,.arch-hub,.stat-box').forEach(el=>{el.classList.add('fade-in');obs.observe(el)});
+
+// Keyboard nav
+document.addEventListener('keydown',e=>{
+  const sl=document.querySelectorAll('.slide');
+  const cur=[...sl].findIndex(s=>{const r=s.getBoundingClientRect();return r.top>=-100&&r.top<innerHeight/2});
+  if(e.key==='ArrowDown'||e.key===' '){e.preventDefault();if(cur<sl.length-1)sl[cur+1].scrollIntoView({behavior:'smooth'})}
+  if(e.key==='ArrowUp'){e.preventDefault();if(cur>0)sl[cur-1].scrollIntoView({behavior:'smooth'})}
+});
+
+const audioEl=document.getElementById('demoAudio');
+let audioReady=false;
+
+function initAudio(){
+  if(audioReady) return;
+  // Note: using .ogg for compatibility with the provided asset
+  audioEl.src='spanish.ogg';
+  audioReady=true;
+}
+
+function togglePlay(){
+  initAudio();
+  const btn=document.getElementById('playBtn');
+  if(audioEl.paused){audioEl.play();btn.textContent='⏸'}
+  else{audioEl.pause();btn.textContent='▶'}
+}
+
+audioEl.addEventListener('loadedmetadata',()=>{
+  const d=audioEl.duration;
+  document.getElementById('durTime').textContent=Math.floor(d/60)+':'+String(Math.floor(d%60)).padStart(2,'0');
+});
+audioEl.addEventListener('timeupdate',()=>{
+  document.getElementById('prog').style.width=(audioEl.currentTime/audioEl.duration*100)+'%';
+  const t=audioEl.currentTime;
+  document.getElementById('curTime').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+});
+audioEl.addEventListener('ended',()=>{
+  document.getElementById('playBtn').textContent='▶';
+  document.getElementById('prog').style.width='0%';
+  document.getElementById('curTime').textContent='0:00';
+});
+</script>
 </body>
 </html>
